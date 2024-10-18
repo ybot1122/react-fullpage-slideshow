@@ -5,7 +5,8 @@
   "main": "dist/src/ReactFullpageSlideshow.js",
   "scripts": {
     "test": "npm run test",
-    "typecheck": "tsc",
+    "typecheck": "tsc --no-emit",
+    "build": "tsc",
     "prepare": "husky install",
     "format": "prettier --write ."
   },
@@ -37,7 +38,8 @@
   },
   "lint-staged": {
     "*/.{js,jsx,ts,tsx,json}": [
-      "prettier --write"
+      "prettier --write",
+      "npm run typecheck"
     ]
   }
 }
