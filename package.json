@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run test",
     "typecheck": "tsc",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,7 @@
   },
   "lint-staged": {
     "*/.{js,jsx,ts,tsx,json}": [
-    "prettier --write"
+      "prettier --write"
     ]
-    }
   }
+}
