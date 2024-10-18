@@ -1,0 +1,25 @@
+{
+  "name": "@ybot1122/react-fullpage-slideshow",
+  "version": "0.0.1",
+  "description": "React component to create a fullpage slideshow.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ybot1122/react-fullpage-slideshow.git"
+  },
+  "keywords": [
+    "react",
+    "fullpage",
+    "slideshow",
+    "component"
+  ],
+  "author": "ybot1122",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ybot1122/react-fullpage-slideshow/issues"
+  },
+  "homepage": "https://github.com/ybot1122/react-fullpage-slideshow#readme"
+}
