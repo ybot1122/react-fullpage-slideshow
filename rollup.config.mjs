@@ -11,7 +11,7 @@ const config = {
     dir: "dist",
   },
   plugins: [typescript({
-    exclude: ["**/*.test.tsx"]
+    exclude: ["**/test/**.test.tsx"]
   })],
   external: ['react']
 };
