@@ -2,8 +2,9 @@
   "name": "@ybot1122/react-fullpage-slideshow",
   "version": "0.0.1",
   "description": "React component to create a fullpage slideshow.",
-  "main": "dist/src/ReactFullpageSlideshow.js",
-  "scripts": {
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+    "scripts": {
     "test": "npm run test",
     "typecheck": "tsc --no-emit",
     "build": "tsc",
