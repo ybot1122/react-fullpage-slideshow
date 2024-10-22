@@ -1,6 +1,6 @@
 {
   "name": "@ybot1122/react-fullpage-slideshow",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha",
   "description": "React component to create a fullpage slideshow.",
   "type": "module",
   "main": "./dist/index.js",
