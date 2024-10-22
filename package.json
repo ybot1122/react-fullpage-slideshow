@@ -10,7 +10,8 @@
     "typecheck": "tsc --no-emit",
     "prepare": "husky install",
     "format": "prettier --write .",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "lint": "npx eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -29,14 +30,17 @@
   },
   "homepage": "https://github.com/ybot1122/react-fullpage-slideshow#readme",
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-typescript": "^12.1.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",
+    "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.13",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
+    "eslint": "^9.13.0",
     "husky": "^8.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -46,7 +50,8 @@
     "rollup": "^4.24.0",
     "ts-jest": "^29.2.5",
     "tslib": "^2.8.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.10.0"
   },
   "peerDependencies": {
     "react": "^18.0.0"
@@ -54,6 +59,7 @@
   "lint-staged": {
     "*/.{js,jsx,ts,tsx,json}": [
       "prettier --write",
+      "npm run lint",
       "npm run typecheck"
     ]
   }
