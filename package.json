@@ -59,7 +59,7 @@
   "lint-staged": {
     "*/.{js,jsx,ts,tsx,json}": [
       "prettier --write",
-      "npx eslint --fix",
+      "npm run lint",
       "npm run typecheck"
     ]
   }

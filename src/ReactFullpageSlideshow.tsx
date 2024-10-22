@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
-export default function ReactFullpageSlideshow({items}: {items: JSX.Element[]}) {
+export default function ReactFullpageSlideshow({items}: {items: ReactFullpageSlideshowItem[]}) {
 
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -12,7 +12,7 @@ export default function ReactFullpageSlideshow({items}: {items: JSX.Element[]}) 
     }
   }, [setActiveIndex]);
 
-  const itemsWrapped = items.map((item, ind) => <SlideContainer index={ind} activeIndex={activeIndex} key={ind + '-fullpage-slideshow'}>{item}</SlideContainer>)
+  const itemsWrapped = items.map((item, ind) => <SlideContainer goToSlide={goToSlide} index={ind} activeIndex={activeIndex} key={ind + '-fullpage-slideshow'}>{item}</SlideContainer>)
 
   return <div style={{
     overflow: 'hidden',
@@ -24,7 +24,10 @@ export default function ReactFullpageSlideshow({items}: {items: JSX.Element[]}) 
   }}>{itemsWrapped}</div>
 }
 
-const SlideContainer = ({children, index, activeIndex}: {children: JSX.Element, index: number, activeIndex: number}) => {
+type GoToSlide = (index: number) => void;
+type ReactFullpageSlideshowItem = (goToSlide: GoToSlide) => JSX.Element;
+
+const SlideContainer = ({children, index, activeIndex, goToSlide}: {children: ReactFullpageSlideshowItem, index: number, activeIndex: number, goToSlide: GoToSlide}) => {
   let top = "0px";
   if (index < activeIndex) {
     top = "-100vh";
@@ -41,7 +44,7 @@ const SlideContainer = ({children, index, activeIndex}: {children: JSX.Element, 
   }}>
 
 
-    {children}
+    {children(goToSlide)}
 
   </section>)
 
