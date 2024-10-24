@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
+import { GoToSlide, ReactFullpageSlideshowItem, rfsApi } from "./types";
 
 export default function ReactFullpageSlideshow({items}: {items: ReactFullpageSlideshowItem[]}) {
 
@@ -24,15 +25,21 @@ export default function ReactFullpageSlideshow({items}: {items: ReactFullpageSli
   }}>{itemsWrapped}</div>
 }
 
-type GoToSlide = (index: number) => void;
-type ReactFullpageSlideshowItem = (goToSlide: GoToSlide) => JSX.Element;
-
 const SlideContainer = ({children, index, activeIndex, goToSlide}: {children: ReactFullpageSlideshowItem, index: number, activeIndex: number, goToSlide: GoToSlide}) => {
   let top = "0px";
   if (index < activeIndex) {
     top = "-100vh";
   } else if (index > activeIndex) {
     top = "100vh";
+  }
+
+  const goToNextSlide = useCallback(() => goToSlide(index - 1), [goToSlide, index]);
+  const goToPreviousSlide = useCallback(() => goToSlide(index + 1), [goToSlide, index]);
+
+  const api:rfsApi = {
+    goToNextSlide,
+    goToPreviousSlide,
+    goToSlide
   }
 
   return (<section style={{
@@ -44,7 +51,7 @@ const SlideContainer = ({children, index, activeIndex, goToSlide}: {children: Re
   }}>
 
 
-    {children(goToSlide)}
+    {children(api)}
 
   </section>)
 

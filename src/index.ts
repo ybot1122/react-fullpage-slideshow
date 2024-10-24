@@ -3,5 +3,5 @@ import Square from "./Square";
 
 export {
   Square,
-  ReactFullpageSlideshow
+  ReactFullpageSlideshow,
 }
