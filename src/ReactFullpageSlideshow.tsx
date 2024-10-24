@@ -33,8 +33,8 @@ const SlideContainer = ({children, index, activeIndex, goToSlide}: {children: Re
     top = "100vh";
   }
 
-  const goToNextSlide = useCallback(() => goToSlide(index - 1), [goToSlide, index]);
-  const goToPreviousSlide = useCallback(() => goToSlide(index + 1), [goToSlide, index]);
+  const goToNextSlide = useCallback(() => goToSlide(index + 1), [goToSlide, index]);
+  const goToPreviousSlide = useCallback(() => goToSlide(index - 1), [goToSlide, index]);
 
   const api:rfsApi = {
     goToNextSlide,
