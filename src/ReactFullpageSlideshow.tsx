@@ -26,12 +26,7 @@ export default function ReactFullpageSlideshow({items}: {items: ReactFullpageSli
 }
 
 const SlideContainer = ({children, index, activeIndex, goToSlide}: {children: ReactFullpageSlideshowItem, index: number, activeIndex: number, goToSlide: GoToSlide}) => {
-  let top = "0px";
-  if (index < activeIndex) {
-    top = "-100vh";
-  } else if (index > activeIndex) {
-    top = "100vh";
-  }
+const top = `${(index - activeIndex) * 100}vh`;
 
   const goToNextSlide = useCallback(() => goToSlide(index + 1), [goToSlide, index]);
   const goToPreviousSlide = useCallback(() => goToSlide(index - 1), [goToSlide, index]);
@@ -47,6 +42,7 @@ const SlideContainer = ({children, index, activeIndex, goToSlide}: {children: Re
     width: '100%',
     height: '100%',
     zIndex: index * 100,
+    left: '0px',
     top,
   }}>
 
