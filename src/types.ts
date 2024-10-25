@@ -1,7 +1,7 @@
-export type rfsApi = {
-  goToSlide: GoToSlide,
-  goToNextSlide: GoToNextSlide,
-  goToPreviousSlide: GoToPreviousSlide,
+export interface rfsApi {
+  goToSlide: GoToSlide;
+  goToNextSlide: GoToNextSlide;
+  goToPreviousSlide: GoToPreviousSlide;
 }
 
 export type GoToPreviousSlide = () => void;
