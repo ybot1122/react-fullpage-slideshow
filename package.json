@@ -8,13 +8,15 @@
   "exports": "./dist/index.js",
   "scripts": {
     "test": "jest",
-    "typecheck": "tsc --no-emit",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky install",
     "format": "prettier --write .",
     "build": "rollup -c",
     "lint": "npx eslint . --fix"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ybot1122/react-fullpage-slideshow.git"
@@ -38,6 +40,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
     "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.13",
     "@types/react": "^18.3.11",
@@ -57,12 +60,5 @@
   },
   "peerDependencies": {
     "react": "^18.0.0"
-  },
-  "lint-staged": {
-    "*/.{js,jsx,ts,tsx,json}": [
-      "prettier --write",
-      "npm run lint",
-      "npm run typecheck"
-    ]
   }
 }

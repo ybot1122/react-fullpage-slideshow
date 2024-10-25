@@ -10,10 +10,12 @@ const config = {
     sourcemap: true,
     dir: "dist",
   },
-  plugins: [typescript({
-    exclude: ["**/test/**.test.tsx"]
-  })],
-  external: ['react']
+  plugins: [
+    typescript({
+      exclude: ["**/test/**.test.tsx"],
+    }),
+  ],
+  external: ["react"],
 };
 
 export default config;

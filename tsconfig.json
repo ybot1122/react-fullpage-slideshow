@@ -13,6 +13,6 @@
     "outDir": "dist"
   },
   "include": ["src", "test"],
-  "exclude": ["node_modules", "dist"],
-  "types": ["node", "jest", "@testing-library/jest-dom"],
+  "exclude": ["node_modules", "dist", "package.json", "package-lock.json"],
+  "types": ["node", "jest", "@testing-library/jest-dom"]
 }
