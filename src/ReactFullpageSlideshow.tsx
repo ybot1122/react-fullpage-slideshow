@@ -3,8 +3,10 @@ import { GoToSlide, ReactFullpageSlideshowItem, rfsApi } from "./types";
 
 export default function ReactFullpageSlideshow({
   items,
+  itemClassName = "",
 }: {
   items: ReactFullpageSlideshowItem[];
+  itemClassName?: string;
 }) {
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -25,6 +27,7 @@ export default function ReactFullpageSlideshow({
       index={ind}
       activeIndex={activeIndex}
       key={ind + "-fullpage-slideshow"}
+      className={itemClassName}
     >
       {item}
     </SlideContainer>
@@ -51,11 +54,13 @@ const SlideContainer = ({
   index,
   activeIndex,
   goToSlide,
+  className,
 }: {
   children: ReactFullpageSlideshowItem;
   index: number;
   activeIndex: number;
   goToSlide: GoToSlide;
+  className: string;
 }) => {
   const top = `${(index - activeIndex) * 100}vh`;
 
@@ -76,6 +81,7 @@ const SlideContainer = ({
 
   return (
     <section
+      className={className}
       style={{
         position: "absolute",
         width: "100%",
