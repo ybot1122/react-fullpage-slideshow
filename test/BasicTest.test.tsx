@@ -8,6 +8,10 @@ import { rfsApi } from "../src/types";
 describe("BasicTest", () => {
   it("renders", async () => {
     const user = userEvent.setup();
+    jest
+      .spyOn(document.documentElement, "clientHeight", "get")
+      .mockImplementation(() => 500);
+
     render(<App />);
 
     expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
@@ -98,6 +102,7 @@ describe("BasicTest", () => {
       "top: 0vh",
     );
 
+    // Clicking this should be a no-op because we are already on the last slide
     await user.click(screen.getByText("Next-Slide-slide 5"));
 
     expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
@@ -208,7 +213,7 @@ describe("BasicTest", () => {
   });
 });
 
-const App = () => {
+export const App = () => {
   return (
     <main>
       <ReactFullpageSlideshow
