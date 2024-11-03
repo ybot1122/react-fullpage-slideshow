@@ -83,7 +83,6 @@ export default function ReactFullpageSlideshow({
       const isDragged =
         Math.abs(yOffsetRef.current) >=
         document.documentElement.clientHeight / 2;
-      console.log(isSwipe);
       if (isSwipe || isDragged) {
         if (y < pointerStartData.current.y) {
           goToSlide(activeIndexRef.current + 1);
