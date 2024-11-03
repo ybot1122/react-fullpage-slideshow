@@ -45,7 +45,7 @@ export default function ReactFullpageSlideshow({
       let y = 0;
 
       if (isPointerEvent(event) || isMouseEvent(event)) {
-        y = event.y;
+        y = event.clientY;
       } else {
         y = event.changedTouches["0"].clientY;
       }
@@ -69,7 +69,7 @@ export default function ReactFullpageSlideshow({
 
       let y = 0;
       if (isPointerEvent(event) || isMouseEvent(event)) {
-        y = event.y;
+        y = event.clientY;
       } else {
         y = event.changedTouches["0"].clientY;
       }
