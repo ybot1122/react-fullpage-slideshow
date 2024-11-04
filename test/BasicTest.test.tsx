@@ -15,68 +15,89 @@ describe("BasicTest", () => {
 
     render(<App />);
 
+    assertSlidePosition(0, screen);
+
     await act(async () => {
-      assertSlidePosition(0, screen);
-
       await user.click(screen.getByText("Next-Slide-slide 1"));
-
-      assertSlidePosition(1, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Next-Slide-slide 2"));
-
-      assertSlidePosition(2, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Next-Slide-slide 3"));
-
-      assertSlidePosition(3, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Next-Slide-slide 4"));
-
-      assertSlidePosition(4, screen);
-
-      jest.runAllTimers();
-
-      // Clicking this should be a no-op because we are already on the last slide
-      await user.click(screen.getByText("Next-Slide-slide 5"));
-
-      assertSlidePosition(4, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Previous-Slide-slide 5"));
-
-      assertSlidePosition(3, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Previous-Slide-slide 4"));
-
-      assertSlidePosition(2, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Previous-Slide-slide 3"));
-
-      assertSlidePosition(1, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Previous-Slide-slide 2"));
-
-      assertSlidePosition(0, screen);
-
-      jest.runAllTimers();
-
-      await user.click(screen.getByText("Previous-Slide-slide 1"));
-
-      assertSlidePosition(0, screen);
     });
+
+    assertSlidePosition(1, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 2"));
+    });
+
+    assertSlidePosition(2, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 3"));
+    });
+
+    assertSlidePosition(3, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 4"));
+    });
+
+    assertSlidePosition(4, screen);
+
+    jest.runAllTimers();
+
+    // This should be a no-op because it is already the last slide
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 5"));
+    });
+
+    assertSlidePosition(4, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 5"));
+    });
+
+    assertSlidePosition(3, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 4"));
+    });
+
+    assertSlidePosition(2, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 3"));
+    });
+
+    assertSlidePosition(1, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 2"));
+    });
+
+    assertSlidePosition(0, screen);
+
+    jest.runAllTimers();
+
+    // This should be a no-op because it is already the first slide
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 1"));
+    });
+
+    assertSlidePosition(0, screen);
+
+    jest.runAllTimers();
   });
 });
 

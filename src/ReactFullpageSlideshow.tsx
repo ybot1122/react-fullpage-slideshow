@@ -34,26 +34,20 @@ export default function ReactFullpageSlideshow({
     undefined | { timestamp: number; y: number }
   >();
 
-  console.log(isAnimatingRef.current);
-
   const goToSlide = useCallback(
     (index: number) => {
-      console.log(index, isAnimatingRef.current);
       if (isAnimatingRef.current) return;
-      console.log("wtf");
       if (
         index >= 0 &&
         index < items.length &&
         index !== activeIndexRef.current
       ) {
-        console.log("go");
         setActiveIndex(index);
         activeIndexRef.current = index;
         isAnimatingRef.current = true;
         setIsAnimating(true);
 
         setTimeout(() => {
-          console.log("end");
           isAnimatingRef.current = false;
           setIsAnimating(false);
         }, slideAnimationMs);
