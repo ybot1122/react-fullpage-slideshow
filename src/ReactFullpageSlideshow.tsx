@@ -25,6 +25,10 @@ export default function ReactFullpageSlideshow({
   const yOffsetRef = useRef(0);
   const [yOffset, setYOffset] = useState(0);
 
+  // tracks whether currently animating a slide change
+  const isAnimatingRef = useRef(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
   // keep track of when/where a pointer or touch event started
   const pointerStartData = useRef<
     undefined | { timestamp: number; y: number }
@@ -32,16 +36,29 @@ export default function ReactFullpageSlideshow({
 
   const goToSlide = useCallback(
     (index: number) => {
-      if (index >= 0 && index < items.length) {
+      if (isAnimatingRef.current) return;
+      if (
+        index >= 0 &&
+        index < items.length &&
+        index !== activeIndexRef.current
+      ) {
         setActiveIndex(index);
         activeIndexRef.current = index;
+        isAnimatingRef.current = true;
+        setIsAnimating(true);
+
+        setTimeout(() => {
+          isAnimatingRef.current = false;
+          setIsAnimating(false);
+        }, slideAnimationMs);
       }
     },
-    [setActiveIndex],
+    [setActiveIndex, setIsAnimating, setYOffset, slideAnimationMs],
   );
 
   const pointerDownCb = useCallback(
     (event: PointerEvent | TouchEvent | MouseEvent) => {
+      if (isAnimatingRef.current) return;
       let y = 0;
 
       if (isPointerEvent(event) || isMouseEvent(event)) {
@@ -65,7 +82,7 @@ export default function ReactFullpageSlideshow({
 
   const pointerUpCb = useCallback(
     (event: PointerEvent | TouchEvent | MouseEvent) => {
-      setYOffset(0);
+      if (isAnimatingRef.current) return;
 
       let y = 0;
       if (isPointerEvent(event) || isMouseEvent(event)) {
@@ -90,8 +107,8 @@ export default function ReactFullpageSlideshow({
           goToSlide(activeIndexRef.current - 1);
         }
       }
-
       yOffsetRef.current = 0;
+      setYOffset(0);
       pointerStartData.current = undefined;
     },
     [
@@ -100,7 +117,27 @@ export default function ReactFullpageSlideshow({
       swipeMaxThresholdMs,
       swipeMinThresholdMs,
       swipeMinDistance,
+      setIsAnimating,
+      slideAnimationMs,
     ],
+  );
+
+  const pointerMoveCb = useCallback(
+    (event: PointerEvent | TouchEvent | MouseEvent) => {
+      if (isAnimatingRef.current) return;
+      if (!pointerStartData.current) return;
+
+      let y = 0;
+      if (isPointerEvent(event) || isMouseEvent(event)) {
+        y = event.clientY;
+      } else {
+        y = event.changedTouches["0"].clientY;
+      }
+
+      setYOffset(y - pointerStartData.current.y);
+      yOffsetRef.current = y - pointerStartData.current.y;
+    },
+    [setYOffset],
   );
 
   useEffect(() => {
@@ -109,11 +146,11 @@ export default function ReactFullpageSlideshow({
     // TODO: feature detect
     addEventListener("pointerdown", pointerDownCb);
     addEventListener("pointerup", pointerUpCb);
-    //addEventListener("pointermove", pointerMoveCb);
+    addEventListener("pointermove", pointerMoveCb);
     addEventListener("pointercancel", pointerCancelCb);
     addEventListener("touchstart", pointerDownCb);
     addEventListener("touchcancel", pointerCancelCb);
-    //addEventListener("touchmove", pointerMoveCb);
+    addEventListener("touchmove", pointerMoveCb);
     addEventListener("touchend", pointerUpCb);
 
     return () => {
@@ -121,11 +158,11 @@ export default function ReactFullpageSlideshow({
 
       removeEventListener("pointerdown", pointerDownCb);
       removeEventListener("pointerup", pointerUpCb);
-      //removeEventListener("pointermove", pointerMoveCb);
+      removeEventListener("pointermove", pointerMoveCb);
       removeEventListener("pointercancel", pointerCancelCb);
       removeEventListener("touchstart", pointerDownCb);
       removeEventListener("touchcancel", pointerCancelCb);
-      //removeEventListener("touchmove", pointerMoveCb);
+      removeEventListener("touchmove", pointerMoveCb);
       removeEventListener("touchend", pointerUpCb);
     };
   }, [pointerDownCb, pointerUpCb]);
@@ -139,6 +176,7 @@ export default function ReactFullpageSlideshow({
       className={itemClassName}
       slideAnimationMs={slideAnimationMs}
       yOffset={yOffset}
+      isAnimating={isAnimating}
     >
       {item}
     </SlideContainer>
@@ -168,6 +206,7 @@ const SlideContainer = ({
   className,
   slideAnimationMs,
   yOffset,
+  isAnimating,
 }: {
   children: ReactFullpageSlideshowItem;
   index: number;
@@ -176,8 +215,10 @@ const SlideContainer = ({
   className: string;
   slideAnimationMs: number;
   yOffset: number;
+  isAnimating: boolean;
 }) => {
-  const top = `${(index - activeIndex) * 100}vh`;
+  const top = `calc(${(index - activeIndex) * 100}vh + ${yOffset}px)`;
+  console.log(top);
 
   const goToNextSlide = useCallback(
     () => goToSlide(index + 1),
@@ -204,8 +245,7 @@ const SlideContainer = ({
         zIndex: index * 100,
         left: "0px",
         top,
-        transition: `top ${slideAnimationMs}ms ease-in-out`,
-        marginTop: yOffset,
+        transition: isAnimating ? `top ${slideAnimationMs}ms ease-in-out` : ``,
       }}
     >
       {children(api)}
