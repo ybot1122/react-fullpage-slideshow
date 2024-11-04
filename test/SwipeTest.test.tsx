@@ -1,6 +1,6 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { App, assertSlidePosition } from "./BasicTest.test";
+import { App, assertSlidePosition } from "./utils";
 
 jest.useRealTimers();
 
@@ -18,5 +18,5 @@ test("SwipeTest", async () => {
   await new Promise((resolve) => setTimeout(resolve, 51));
   await fireEvent.pointerUp(main, { clientY: 0, ctrlKey: false });
 
-  assertSlidePosition(1);
+  assertSlidePosition(1, screen);
 });
