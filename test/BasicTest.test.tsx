@@ -1,9 +1,10 @@
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, Screen, screen } from "@testing-library/react";
 import React from "react";
-import { ReactFullpageSlideshow } from "../src";
-import { rfsApi } from "../src/types";
+import { App } from "./utils";
+
+jest.useFakeTimers({ advanceTimers: true });
 
 describe("BasicTest", () => {
   it("renders", async () => {
@@ -14,241 +15,98 @@ describe("BasicTest", () => {
 
     render(<App />);
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 300vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 400vh",
-    );
+    assertSlidePosition(0, screen);
 
-    await user.click(screen.getByText("Next-Slide-slide 1"));
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 1"));
+    });
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 300vh",
-    );
+    assertSlidePosition(1, screen);
 
-    await user.click(screen.getByText("Next-Slide-slide 2"));
+    jest.runAllTimers();
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -200vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 2"));
+    });
 
-    await user.click(screen.getByText("Next-Slide-slide 3"));
+    assertSlidePosition(2, screen);
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -300vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: -200vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
+    jest.runAllTimers();
 
-    await user.click(screen.getByText("Next-Slide-slide 4"));
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 3"));
+    });
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -400vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: -300vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: -200vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
+    assertSlidePosition(3, screen);
 
-    // Clicking this should be a no-op because we are already on the last slide
-    await user.click(screen.getByText("Next-Slide-slide 5"));
+    jest.runAllTimers();
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -400vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: -300vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: -200vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 4"));
+    });
 
-    await user.click(screen.getByText("Previous-Slide-slide 5"));
+    assertSlidePosition(4, screen);
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -300vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: -200vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
+    jest.runAllTimers();
 
-    await user.click(screen.getByText("Previous-Slide-slide 4"));
+    // This should be a no-op because it is already the last slide
+    await act(async () => {
+      await user.click(screen.getByText("Next-Slide-slide 5"));
+    });
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -200vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
+    assertSlidePosition(4, screen);
 
-    await user.click(screen.getByText("Previous-Slide-slide 3"));
+    jest.runAllTimers();
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: -100vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 300vh",
-    );
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 5"));
+    });
 
-    await user.click(screen.getByText("Previous-Slide-slide 2"));
+    assertSlidePosition(3, screen);
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 300vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 400vh",
-    );
+    jest.runAllTimers();
 
-    await user.click(screen.getByText("Previous-Slide-slide 1"));
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 4"));
+    });
 
-    expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-      "top: 0vh",
-    );
-    expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-      "top: 100vh",
-    );
-    expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-      "top: 200vh",
-    );
-    expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-      "top: 300vh",
-    );
-    expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-      "top: 400vh",
-    );
+    assertSlidePosition(2, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 3"));
+    });
+
+    assertSlidePosition(1, screen);
+
+    jest.runAllTimers();
+
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 2"));
+    });
+
+    assertSlidePosition(0, screen);
+
+    jest.runAllTimers();
+
+    // This should be a no-op because it is already the first slide
+    await act(async () => {
+      await user.click(screen.getByText("Previous-Slide-slide 1"));
+    });
+
+    assertSlidePosition(0, screen);
+
+    jest.runAllTimers();
   });
 });
 
-export const App = () => {
-  return (
-    <main>
-      <ReactFullpageSlideshow
-        items={[
-          (api) => <Slide {...api} label="slide 1" />,
-          (api) => <Slide {...api} label="slide 2" />,
-          (api) => <Slide {...api} label="slide 3" />,
-          (api) => <Slide {...api} label="slide 4" />,
-          (api) => <Slide {...api} label="slide 5" />,
-        ]}
-      ></ReactFullpageSlideshow>
-    </main>
-  );
-};
-
-const Slide = ({
-  goToSlide,
-  goToNextSlide,
-  label,
-  goToPreviousSlide,
-}: rfsApi & { label: string }) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <h1>{label}</h1>
-      <button onClick={() => goToSlide(0)}>Go to Slide 0</button>
-      <button onClick={() => goToNextSlide()}>{`Next-Slide-${label}`}</button>
-      <button
-        onClick={() => goToPreviousSlide()}
-      >{`Previous-Slide-${label}`}</button>
-    </div>
-  );
+const assertSlidePosition = (activeIndex: number, screen: Screen) => {
+  const slides = [0, 1, 2, 3, 4];
+  slides.map((ind) => {
+    const top = `calc(${(ind - activeIndex) * 100}vh + ${0}px)`;
+    expect(
+      screen.getByText(`slide ${ind + 1}`).parentNode.parentNode,
+    ).toHaveStyle(`top: ${top}`);
+  });
 };

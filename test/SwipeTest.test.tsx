@@ -1,6 +1,9 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { App } from "./BasicTest.test";
+import "@testing-library/jest-dom";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { App } from "./utils";
+
+jest.useRealTimers();
 
 test("SwipeTest", async () => {
   // @ts-expect-error overriding PointerEvent on window
@@ -10,25 +13,24 @@ test("SwipeTest", async () => {
     .mockImplementation(() => 500);
 
   render(<App />);
+  assertSlidePosition(0);
   const main = screen.getByRole("main");
 
-  await fireEvent.pointerDown(main, { clientY: 101, ctrlKey: false });
-  await new Promise((resolve) => setTimeout(resolve, 51));
-  await fireEvent.pointerUp(main, { clientY: 0, ctrlKey: false });
+  await act(async () => {
+    await fireEvent.pointerDown(main, { clientY: 101, ctrlKey: false });
+    await new Promise((resolve) => setTimeout(resolve, 51));
+    await fireEvent.pointerUp(main, { clientY: 0, ctrlKey: false });
+  });
 
-  expect(screen.getByText("slide 1").parentNode.parentNode).toHaveStyle(
-    "top: -100vh",
-  );
-  expect(screen.getByText("slide 2").parentNode.parentNode).toHaveStyle(
-    "top: 0vh",
-  );
-  expect(screen.getByText("slide 3").parentNode.parentNode).toHaveStyle(
-    "top: 100vh",
-  );
-  expect(screen.getByText("slide 4").parentNode.parentNode).toHaveStyle(
-    "top: 200vh",
-  );
-  expect(screen.getByText("slide 5").parentNode.parentNode).toHaveStyle(
-    "top: 300vh",
-  );
+  assertSlidePosition(1);
 });
+
+const assertSlidePosition = (activeIndex: number) => {
+  const slides = [0, 1, 2, 3, 4];
+  slides.map((ind) => {
+    const top = `calc(${(ind - activeIndex) * 100}vh + ${0}px)`;
+    expect(
+      screen.getByText(`slide ${ind + 1}`).parentNode.parentNode,
+    ).toHaveStyle(`top: ${top}`);
+  });
+};
