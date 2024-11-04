@@ -218,7 +218,6 @@ const SlideContainer = ({
   isAnimating: boolean;
 }) => {
   const top = `calc(${(index - activeIndex) * 100}vh + ${yOffset}px)`;
-  console.log(top);
 
   const goToNextSlide = useCallback(
     () => goToSlide(index + 1),
