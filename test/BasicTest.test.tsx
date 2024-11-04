@@ -1,8 +1,8 @@
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, Screen, screen } from "@testing-library/react";
 import React from "react";
-import { App, assertSlidePosition } from "./utils";
+import { App } from "./utils";
 
 jest.useFakeTimers({ advanceTimers: true });
 
@@ -79,3 +79,13 @@ describe("BasicTest", () => {
     });
   });
 });
+
+const assertSlidePosition = (activeIndex: number, screen: Screen) => {
+  const slides = [0, 1, 2, 3, 4];
+  slides.map((ind) => {
+    const top = `calc(${(ind - activeIndex) * 100}vh + ${0}px)`;
+    expect(
+      screen.getByText(`slide ${ind + 1}`).parentNode.parentNode,
+    ).toHaveStyle(`top: ${top}`);
+  });
+};

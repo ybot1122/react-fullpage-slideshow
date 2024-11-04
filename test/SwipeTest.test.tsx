@@ -1,6 +1,6 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { App, assertSlidePosition } from "./utils";
+import { fireEvent, render, Screen, screen } from "@testing-library/react";
+import { App } from "./utils";
 
 jest.useRealTimers();
 
@@ -20,3 +20,13 @@ test("SwipeTest", async () => {
 
   assertSlidePosition(1, screen);
 });
+
+const assertSlidePosition = (activeIndex: number, screen: Screen) => {
+  const slides = [0, 1, 2, 3, 4];
+  slides.map((ind) => {
+    const top = `calc(${(ind - activeIndex) * 100}vh + ${0}px)`;
+    expect(
+      screen.getByText(`slide ${ind + 1}`).parentNode.parentNode,
+    ).toHaveStyle(`top: ${top}`);
+  });
+};

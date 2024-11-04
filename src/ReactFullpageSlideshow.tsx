@@ -106,6 +106,14 @@ export default function ReactFullpageSlideshow({
         } else {
           goToSlide(activeIndexRef.current - 1);
         }
+      } else {
+        isAnimatingRef.current = true;
+        setIsAnimating(true);
+
+        setTimeout(() => {
+          isAnimatingRef.current = false;
+          setIsAnimating(false);
+        }, slideAnimationMs);
       }
       yOffsetRef.current = 0;
       setYOffset(0);

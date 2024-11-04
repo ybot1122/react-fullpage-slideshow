@@ -1,7 +1,6 @@
 import React from "react";
 import { ReactFullpageSlideshow } from "../src";
 import { rfsApi } from "../src/types";
-import { Screen } from "@testing-library/dom";
 
 export const App = () => {
   return (
@@ -17,16 +16,6 @@ export const App = () => {
       ></ReactFullpageSlideshow>
     </main>
   );
-};
-
-export const assertSlidePosition = (activeIndex: number, screen: Screen) => {
-  const slides = [0, 1, 2, 3, 4];
-  slides.map((ind) => {
-    const top = `calc(${(ind - activeIndex) * 100}vh + ${0}px)`;
-    expect(
-      screen.getByText(`slide ${ind + 1}`).parentNode.parentNode,
-    ).toHaveStyle(`top: ${top}`);
-  });
 };
 
 const Slide = ({
