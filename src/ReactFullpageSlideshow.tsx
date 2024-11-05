@@ -6,6 +6,7 @@ export default function ReactFullpageSlideshow({
   items,
   itemClassName = "",
   slideAnimationMs = 1000,
+  slideAnimationTiming = "partial",
   swipeMinThresholdMs = 50,
   swipeMaxThresholdMs = 300,
   swipeMinDistance = 100,
@@ -13,6 +14,7 @@ export default function ReactFullpageSlideshow({
   items: ReactFullpageSlideshowItem[];
   itemClassName?: string;
   slideAnimationMs?: number;
+  slideAnimationTiming?: "partial" | "full";
   swipeMinThresholdMs?: number;
   swipeMaxThresholdMs?: number;
   swipeMinDistance?: number;
@@ -28,6 +30,7 @@ export default function ReactFullpageSlideshow({
   // tracks whether currently animating a slide change
   const isAnimatingRef = useRef(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const modifiedSlideAnimationMs = useRef<number>(null);
 
   // keep track of when/where a pointer or touch event started
   const pointerStartData = useRef<
@@ -42,15 +45,22 @@ export default function ReactFullpageSlideshow({
         index < items.length &&
         index !== activeIndexRef.current
       ) {
-        setActiveIndex(index);
+        modifiedSlideAnimationMs.current =
+          (1 -
+            Math.abs(
+              yOffsetRef.current / document.documentElement.clientHeight,
+            )) *
+          slideAnimationMs;
         activeIndexRef.current = index;
         isAnimatingRef.current = true;
         setIsAnimating(true);
+        setActiveIndex(index);
 
         setTimeout(() => {
           isAnimatingRef.current = false;
+          modifiedSlideAnimationMs.current = null;
           setIsAnimating(false);
-        }, slideAnimationMs);
+        }, modifiedSlideAnimationMs.current);
       }
     },
     [setActiveIndex, setIsAnimating, setYOffset, slideAnimationMs],
@@ -92,6 +102,10 @@ export default function ReactFullpageSlideshow({
       }
 
       if (!pointerStartData.current) return;
+      if (yOffsetRef.current === 0) {
+        pointerStartData.current = null;
+        return;
+      }
       const currentTs = Date.now();
       const isSwipe =
         currentTs - pointerStartData.current?.timestamp < swipeMaxThresholdMs &&
@@ -101,19 +115,23 @@ export default function ReactFullpageSlideshow({
         Math.abs(yOffsetRef.current) >=
         document.documentElement.clientHeight / 2;
       if (isSwipe || isDragged) {
-        if (y < pointerStartData.current.y) {
+        if (yOffsetRef.current < 0) {
           goToSlide(activeIndexRef.current + 1);
         } else {
           goToSlide(activeIndexRef.current - 1);
         }
-      } else if (yOffsetRef.current !== 0) {
+      } else {
         isAnimatingRef.current = true;
+        modifiedSlideAnimationMs.current =
+          Math.abs(yOffsetRef.current / document.documentElement.clientHeight) *
+          slideAnimationMs;
         setIsAnimating(true);
 
         setTimeout(() => {
           isAnimatingRef.current = false;
+          modifiedSlideAnimationMs.current = null;
           setIsAnimating(false);
-        }, slideAnimationMs);
+        }, modifiedSlideAnimationMs.current);
       }
       yOffsetRef.current = 0;
       setYOffset(0);
@@ -182,7 +200,11 @@ export default function ReactFullpageSlideshow({
       activeIndex={activeIndex}
       key={ind + "-fullpage-slideshow"}
       className={itemClassName}
-      slideAnimationMs={slideAnimationMs}
+      slideAnimationMs={
+        slideAnimationTiming === "partial"
+          ? (modifiedSlideAnimationMs.current ?? slideAnimationMs)
+          : slideAnimationMs
+      }
       yOffset={yOffset}
       isAnimating={isAnimating}
     >
