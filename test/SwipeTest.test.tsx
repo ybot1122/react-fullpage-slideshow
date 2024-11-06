@@ -18,8 +18,10 @@ test("SwipeTest", async () => {
 
   await act(async () => {
     await fireEvent.pointerDown(main, { clientY: 101, ctrlKey: false });
+    await fireEvent.pointerMove(main, { clientY: 0, ctrlKey: false });
     await new Promise((resolve) => setTimeout(resolve, 51));
     await fireEvent.pointerUp(main, { clientY: 0, ctrlKey: false });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   });
 
   assertSlidePosition(1);
