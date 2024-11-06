@@ -2,10 +2,15 @@ import React from "react";
 import { ReactFullpageSlideshow } from "../src";
 import { rfsApi } from "../src/types";
 
-export const App = () => {
+export const App = ({
+  slideAnimationTiming = "full",
+}: {
+  slideAnimationTiming?: "full" | "partial";
+}) => {
   return (
     <main>
       <ReactFullpageSlideshow
+        slideAnimationTiming={slideAnimationTiming}
         items={[
           (api) => <Slide {...api} label="slide 1" />,
           (api) => <Slide {...api} label="slide 2" />,
