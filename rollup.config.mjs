@@ -12,7 +12,7 @@ const config = {
   },
   plugins: [
     typescript({
-      exclude: ["**/test/**.test.tsx"],
+      exclude: ["**/test/**"],
     }),
   ],
   external: ["react"],
