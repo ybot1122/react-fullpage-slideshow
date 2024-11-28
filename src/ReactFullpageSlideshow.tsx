@@ -166,8 +166,22 @@ export default function ReactFullpageSlideshow({
     [setYOffset],
   );
 
+  const wheelCb = useCallback(
+    (event: WheelEvent) => {
+      const isIntentional = true; // TODO check
+      if (isIntentional) {
+        if (event.deltaY < 0 && activeIndexRef.current > 0) {
+          goToSlide(activeIndexRef.current - 1);
+        } else if (event.deltaY > 0 && activeIndexRef.current < 5) {
+          goToSlide(activeIndexRef.current + 1);
+        }
+      }
+    },
+    [goToSlide],
+  );
+
   useEffect(() => {
-    //addEventListener("wheel", wheelCb);
+    addEventListener("wheel", wheelCb);
 
     // TODO: feature detect
     addEventListener("pointerdown", pointerDownCb);
@@ -180,7 +194,7 @@ export default function ReactFullpageSlideshow({
     addEventListener("touchend", pointerUpCb);
 
     return () => {
-      //removeEventListener("wheel", wheelCb);
+      removeEventListener("wheel", wheelCb);
 
       removeEventListener("pointerdown", pointerDownCb);
       removeEventListener("pointerup", pointerUpCb);
